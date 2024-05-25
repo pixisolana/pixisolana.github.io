@@ -368,15 +368,18 @@
         };
     </script>
      <script>
-        // Communicate height to parent window if cross-origin
-        window.onload = function() {
+        function sendHeightToParent() {
             if (window.parent && window.parent !== window) {
                 window.parent.postMessage({
                     type: 'resizeIframe',
                     height: document.body.scrollHeight
-                }, '*');
+                }, 'https://pixi-2546d9.webflow.io'); // Replace with the parent page's origin
             }
-        };
+        }
+
+        // Send height to parent window on load and on resize
+        window.onload = sendHeightToParent;
+        window.onresize = sendHeightToParent;
     </script>
 </body>
 </html>
