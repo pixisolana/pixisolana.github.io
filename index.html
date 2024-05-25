@@ -367,16 +367,6 @@
             updateTraits();
         };
     </script>
-     <script>
-        // Communicate height to parent window if cross-origin
-        window.onload = function() {
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'resizeIframe',
-                    height: document.body.scrollHeight
-                }, '*');
-            }
-        };
-    </script>
+    
 </body>
 </html>
