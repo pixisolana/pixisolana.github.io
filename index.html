@@ -77,7 +77,7 @@
             border: 2px dashed #fff;
         }
         .canvas-wrapper {
-            background-image: url('./PIXI_SCREEN.png');
+            background-image: url('https://pixisolana.github.io/PIXI_SCREEN.png');
             height: 320px;
             width: 320px;
             background-size: contain;
@@ -115,12 +115,12 @@
             height: 39px;
         }
         .arrow.left {
-            background-image: url("./L_ARROW.png");
+            background-image: url("https://pixisolana.github.io//L_ARROW.png");
             background-position: center;
             background-repeat: no-repeat;
         }
         .arrow.right {
-            background-image: url("./R_ARROW.png");
+            background-image: url("https://pixisolana.github.io//R_ARROW.png");
             background-position: center;
             background-repeat: no-repeat;
         }
@@ -196,16 +196,168 @@
 
     <script>
         const directoryContents = {
-            "cloth": ['none.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png', '16.png', '17.png', '18.png', '19.png', '20.png', '21.png', '22.png', '23.png', '24.png', '25.png', '26.png', '27.png', '28.png', '29.png', '30.png', '31.png', '32.png', '33.png', '34.png', '35.png', '36.png', '37.png', '38.png', '39.png', '40.png', '41.png', '42.png', '43.png', '44.png', '45.png', '46.png', '47.png'],
-            "head": ['none.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png', '16.png', '17.png', '18.png', '19.png', '20.png', '21.png', '22.png', '23.png', '24.png', '25.png', '26.png', '27.png', '28.png', '29.png', '30.png', '31.png', '33.png', '34.png', '35.png', '36.png', '37.png', '38.png', '39.png', '40.png', '41.png', '43.png', '44.png', '45.png', '46.png', '47.png'],
-            "skin": ['none.png', '0xcross skin.png', 'agne skin.png', 'artchick skin.png', 'base skin.png', 'bear-skin.png', 'bobby skin.png', 'erik stevans skin.png', 'leonardo dicrypto skin.png','mrpunk skin.png','optimus skin.png'],
-            "accessories": ['none.png', '1.png', '2.png', '3.png', '4.png', '5.png', '6.png', '7.png', '8.png', '9.png', '10.png', '11.png', '12.png', '13.png', '14.png', '15.png', '16.png', '17.png', '18.png', '19.png', '20.png', '21.png', '22.png', '23.png', '24.png', '25.png', '26.png', '27.png', '28.png', '29.png', '30.png', '31.png', '32.png', '33.png', '34.png', '35.png'],
-            "bg": ['none.png','base-bg.jpg', 'bg-2.jpg', 'bg-3.jpg', 'bg-4.jpg', 'bg-5.jpg']
-        };
+
+            "cloth" : [
+    "https://pixisolana.github.io/cloth/none.png",
+    "https://pixisolana.github.io/cloth/1.png",
+    "https://pixisolana.github.io/cloth/2.png",
+    "https://pixisolana.github.io/cloth/3.png",
+    "https://pixisolana.github.io/cloth/4.png",
+    "https://pixisolana.github.io/cloth/5.png",
+    "https://pixisolana.github.io/cloth/6.png",
+    "https://pixisolana.github.io/cloth/7.png",
+    "https://pixisolana.github.io/cloth/8.png",
+    "https://pixisolana.github.io/cloth/9.png",
+    "https://pixisolana.github.io/cloth/10.png",
+    "https://pixisolana.github.io/cloth/11.png",
+    "https://pixisolana.github.io/cloth/12.png",
+    "https://pixisolana.github.io/cloth/13.png",
+    "https://pixisolana.github.io/cloth/14.png",
+    "https://pixisolana.github.io/cloth/15.png",
+    "https://pixisolana.github.io/cloth/16.png",
+    "https://pixisolana.github.io/cloth/17.png",
+    "https://pixisolana.github.io/cloth/18.png",
+    "https://pixisolana.github.io/cloth/19.png",
+    "https://pixisolana.github.io/cloth/20.png",
+    "https://pixisolana.github.io/cloth/21.png",
+    "https://pixisolana.github.io/cloth/22.png",
+    "https://pixisolana.github.io/cloth/23.png",
+    "https://pixisolana.github.io/cloth/24.png",
+    "https://pixisolana.github.io/cloth/25.png",
+    "https://pixisolana.github.io/cloth/26.png",
+    "https://pixisolana.github.io/cloth/27.png",
+    "https://pixisolana.github.io/cloth/28.png",
+    "https://pixisolana.github.io/cloth/29.png",
+    "https://pixisolana.github.io/cloth/30.png",
+    "https://pixisolana.github.io/cloth/31.png",
+    "https://pixisolana.github.io/cloth/32.png",
+    "https://pixisolana.github.io/cloth/33.png",
+    "https://pixisolana.github.io/cloth/34.png",
+    "https://pixisolana.github.io/cloth/35.png",
+    "https://pixisolana.github.io/cloth/36.png",
+    "https://pixisolana.github.io/cloth/37.png",
+    "https://pixisolana.github.io/cloth/38.png",
+    "https://pixisolana.github.io/cloth/39.png",
+    "https://pixisolana.github.io/cloth/40.png",
+    "https://pixisolana.github.io/cloth/41.png",
+    "https://pixisolana.github.io/cloth/42.png",
+    "https://pixisolana.github.io/cloth/43.png",
+    "https://pixisolana.github.io/cloth/44.png",
+    "https://pixisolana.github.io/cloth/45.png",
+    "https://pixisolana.github.io/cloth/46.png",
+    "https://pixisolana.github.io/cloth/47.png"
+],
+"head" : [
+    "https://pixisolana.github.io/head/none.png",
+    "https://pixisolana.github.io/head/1.png",
+    "https://pixisolana.github.io/head/2.png",
+    "https://pixisolana.github.io/head/3.png",
+    "https://pixisolana.github.io/head/4.png",
+    "https://pixisolana.github.io/head/5.png",
+    "https://pixisolana.github.io/head/6.png",
+    "https://pixisolana.github.io/head/7.png",
+    "https://pixisolana.github.io/head/8.png",
+    "https://pixisolana.github.io/head/9.png",
+    "https://pixisolana.github.io/head/10.png",
+    "https://pixisolana.github.io/head/11.png",
+    "https://pixisolana.github.io/head/12.png",
+    "https://pixisolana.github.io/head/13.png",
+    "https://pixisolana.github.io/head/14.png",
+    "https://pixisolana.github.io/head/15.png",
+    "https://pixisolana.github.io/head/16.png",
+    "https://pixisolana.github.io/head/17.png",
+    "https://pixisolana.github.io/head/18.png",
+    "https://pixisolana.github.io/head/19.png",
+    "https://pixisolana.github.io/head/20.png",
+    "https://pixisolana.github.io/head/21.png",
+    "https://pixisolana.github.io/head/22.png",
+    "https://pixisolana.github.io/head/23.png",
+    "https://pixisolana.github.io/head/24.png",
+    "https://pixisolana.github.io/head/25.png",
+    "https://pixisolana.github.io/head/26.png",
+    "https://pixisolana.github.io/head/27.png",
+    "https://pixisolana.github.io/head/28.png",
+    "https://pixisolana.github.io/head/29.png",
+    "https://pixisolana.github.io/head/30.png",
+    "https://pixisolana.github.io/head/31.png",
+    "https://pixisolana.github.io/head/33.png",
+    "https://pixisolana.github.io/head/34.png",
+    "https://pixisolana.github.io/head/35.png",
+    "https://pixisolana.github.io/head/36.png",
+    "https://pixisolana.github.io/head/37.png",
+    "https://pixisolana.github.io/head/38.png",
+    "https://pixisolana.github.io/head/39.png",
+    "https://pixisolana.github.io/head/40.png",
+    "https://pixisolana.github.io/head/41.png",
+    "https://pixisolana.github.io/head/43.png",
+    "https://pixisolana.github.io/head/44.png",
+    "https://pixisolana.github.io/head/45.png",
+    "https://pixisolana.github.io/head/46.png",
+    "https://pixisolana.github.io/head/47.png"
+],
+"skin" : [
+    "https://pixisolana.github.io/skin/none.png",
+    "https://pixisolana.github.io/skin/0xcross skin.png",
+    "https://pixisolana.github.io/skin/agne skin.png",
+    "https://pixisolana.github.io/skin/artchick skin.png",
+    "https://pixisolana.github.io/skin/base skin.png",
+    "https://pixisolana.github.io/skin/bear-skin.png",
+    "https://pixisolana.github.io/skin/bobby skin.png",
+    "https://pixisolana.github.io/skin/erik stevans skin.png",
+    "https://pixisolana.github.io/skin/leonardo dicrypto skin.png",
+    "https://pixisolana.github.io/skin/mrpunk skin.png",
+    "https://pixisolana.github.io/skin/optimus skin.png"
+],
+"accessories" : [
+    "https://pixisolana.github.io/accessories/none.png",
+    "https://pixisolana.github.io/accessories/1.png",
+    "https://pixisolana.github.io/accessories/2.png",
+    "https://pixisolana.github.io/accessories/3.png",
+    "https://pixisolana.github.io/accessories/4.png",
+    "https://pixisolana.github.io/accessories/5.png",
+    "https://pixisolana.github.io/accessories/6.png",
+    "https://pixisolana.github.io/accessories/7.png",
+    "https://pixisolana.github.io/accessories/8.png",
+    "https://pixisolana.github.io/accessories/9.png",
+    "https://pixisolana.github.io/accessories/10.png",
+    "https://pixisolana.github.io/accessories/11.png",
+    "https://pixisolana.github.io/accessories/12.png",
+    "https://pixisolana.github.io/accessories/13.png",
+    "https://pixisolana.github.io/accessories/14.png",
+    "https://pixisolana.github.io/accessories/15.png",
+    "https://pixisolana.github.io/accessories/16.png",
+    "https://pixisolana.github.io/accessories/17.png",
+    "https://pixisolana.github.io/accessories/18.png",
+    "https://pixisolana.github.io/accessories/19.png",
+    "https://pixisolana.github.io/accessories/20.png",
+    "https://pixisolana.github.io/accessories/21.png",
+    "https://pixisolana.github.io/accessories/22.png",
+    "https://pixisolana.github.io/accessories/23.png",
+    "https://pixisolana.github.io/accessories/24.png",
+    "https://pixisolana.github.io/accessories/25.png",
+    "https://pixisolana.github.io/accessories/26.png",
+    "https://pixisolana.github.io/accessories/27.png",
+    "https://pixisolana.github.io/accessories/28.png",
+    "https://pixisolana.github.io/accessories/29.png",
+    "https://pixisolana.github.io/accessories/30.png",
+    "https://pixisolana.github.io/accessories/31.png",
+    "https://pixisolana.github.io/accessories/32.png",
+    "https://pixisolana.github.io/accessories/33.png",
+    "https://pixisolana.github.io/accessories/34.png",
+    "https://pixisolana.github.io/accessories/35.png"
+],
+"bg" : [
+    "https://pixisolana.github.io/bg/none.png",
+    "https://pixisolana.github.io/bg/base-bg.jpg",
+    "https://pixisolana.github.io/bg/bg-2.jpg",
+    "https://pixisolana.github.io/bg/bg-3.jpg",
+    "https://pixisolana.github.io/bg/bg-4.jpg",
+    "https://pixisolana.github.io/bg/bg-5.jpg"
+]        };
 
         let selectedTraits = {
-            bg: "bg/base-bg.jpg",
-            skin: "skin/base skin.png",
+            bg: "https://pixisolana.github.io/bg/base-bg.jpg",
+            skin: "https://pixisolana.github.io/skin/base skin.png",
             head: "",
             cloth: "",
             accessories: ""
@@ -318,8 +470,8 @@
         }
 
         function resetPFP() {
-            selectedTraits.bg = "bg/base-bg.jpg";
-            selectedTraits.skin = "skin/base skin.png";
+            selectedTraits.bg = "https://pixisolana.github.io/bg/base-bg.jpg";
+            selectedTraits.skin = "https://pixisolana.github.io/skin/base skin.png";
             selectedTraits.head = "";
             selectedTraits.cloth = "";
             selectedTraits.accessories = "";
@@ -366,20 +518,6 @@
             // Set default selections
             updateTraits();
         };
-    </script>
-     <script>
-        function sendHeightToParent() {
-            if (window.parent && window.parent !== window) {
-                window.parent.postMessage({
-                    type: 'resizeIframe',
-                    height: document.body.scrollHeight
-                }, 'https://pixi-2546d9.webflow.io'); // Replace with the parent page's origin
-            }
-        }
-
-        // Send height to parent window on load and on resize
-        window.onload = sendHeightToParent;
-        window.onresize = sendHeightToParent;
     </script>
 </body>
 </html>
