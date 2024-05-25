@@ -38,13 +38,13 @@
             width: 100%;
         }
         .slider img {
-    max-width: 100px;
-    cursor: pointer;
-    margin: 0 5px;
-    padding: 5px;
-    border: 2px dashed #fff;
-    width: calc(25% - 20px);
-}
+            max-width: 100px;
+            cursor: pointer;
+            margin: 0 5px;
+            padding: 5px;
+            border: 2px dashed #fff;
+            width: calc(25% - 20px);
+        }
         .arrow { 
             position: absolute; 
             top: 50%; 
@@ -76,22 +76,6 @@
             align-items: center;
             border: 2px dashed #fff;
         }
-        /* @media (min-width: 992px) {
-            .d-lg-none {
-                display: none;
-            }
-            .slider-container {
-                display: block !important;
-            }
-        }
-        @media (max-width: 991.98px) {
-            .slider-container {
-                display: none;
-            }
-            #bg-slider-container, #skin-slider-container, #head-slider-container, #cloth-slider-container, #accessories-slider-container {
-                display: none;
-            }
-        } */
         .canvas-wrapper {
             background-image: url('./PIXI_SCREEN.png');
             height: 320px;
@@ -110,19 +94,17 @@
         }
         @media (min-width: 992px) {
             .canvas-wrapper {
-            height: 640px;
-            width: 640px;
+                height: 640px;
+                width: 640px;
+            }
+            .slider img { 
+                max-width: 100px; 
+                cursor: pointer; 
+                margin: 0 15px; 
+                padding: 5px;
+                border: 2px dashed #fff;
+            }
         }
-        .slider img { 
-            max-width: 100px; 
-            cursor: pointer; 
-            margin: 0 15px; 
-            padding: 5px;
-            border: 2px dashed #fff;
-            
-        }
-        }
-        
         .canvas-wrapper canvas {
             width: 46.8%;
             height: 46.8%;
@@ -137,7 +119,7 @@
             background-position: center;
             background-repeat: no-repeat;
         }
-        .arrow.arrow.right {
+        .arrow.right {
             background-image: url("./R_ARROW.png");
             background-position: center;
             background-repeat: no-repeat;
@@ -176,16 +158,6 @@
                 </div>
             </div>
             <div class="col-lg-6">
-                <!-- <div class="d-lg-none mb-3">
-                    <select class="form-control" id="traitDropdown" onchange="showTraitSlider(this.value)">
-                        <option value="">Select Trait</option>
-                        <option value="bg">Background</option>
-                        <option value="skin">Skin</option>
-                        <option value="head">Head</option>
-                        <option value="cloth">Cloth</option>
-                        <option value="accessories">Accessories</option>
-                    </select>
-                </div> -->
                 <h3>Background</h3>
                 <div id="bg-slider-container" class="slider-container">
                     <span class="arrow left" onclick="slide('bg', -1)"></span>
@@ -219,6 +191,8 @@
             </div>
         </div>
     </div>
+
+    <canvas id="hiddenCanvas" width="1080" height="1080" style="display:none;"></canvas>
 
     <script>
         const directoryContents = {
@@ -310,8 +284,33 @@
             });
         }
 
-        function downloadPFP() {
-            const canvas = document.getElementById('canvas');
+        async function updateHiddenCanvas() {
+            const canvas = document.getElementById('hiddenCanvas');
+            const context = canvas.getContext('2d');
+
+            const { bg, skin, head, cloth, accessories } = selectedTraits;
+
+            const images = await Promise.all([
+                bg ? loadImage(bg) : null,
+                skin ? loadImage(skin) : null,
+                head ? loadImage(head) : null,
+                cloth ? loadImage(cloth) : null,
+                accessories ? loadImage(accessories) : null
+            ]);
+
+            context.clearRect(0, 0, canvas.width, canvas.height);
+
+            images.forEach(img => {
+                if (img) {
+                    context.drawImage(img, 0, 0, canvas.width, canvas.height);
+                }
+            });
+        }
+
+        async function downloadPFP() {
+            await updateHiddenCanvas();
+
+            const canvas = document.getElementById('hiddenCanvas');
             const link = document.createElement('a');
             link.download = 'PIXI.png';
             link.href = canvas.toDataURL();
