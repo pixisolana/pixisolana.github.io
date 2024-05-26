@@ -182,6 +182,24 @@
                     <div id="cloth-slider" class="slider"></div>
                     <span class="arrow right" onclick="slide('cloth', 1)"></span>
                 </div>
+                <h3>Eyes</h3>
+                <div id="eyes-slider-container" class="slider-container">
+                    <span class="arrow left" onclick="slide('eyes', -1)"></span>
+                    <div id="eyes-slider" class="slider"></div>
+                    <span class="arrow right" onclick="slide('eyes', 1)"></span>
+                </div>
+                <h3>Mouth</h3>
+                <div id="mouth-slider-container" class="slider-container">
+                    <span class="arrow left" onclick="slide('mouth', -1)"></span>
+                    <div id="mouth-slider" class="slider"></div>
+                    <span class="arrow right" onclick="slide('mouth', 1)"></span>
+                </div>
+                <h3>Hand</h3>
+                <div id="hand-slider-container" class="slider-container">
+                    <span class="arrow left" onclick="slide('hand', -1)"></span>
+                    <div id="hand-slider" class="slider"></div>
+                    <span class="arrow right" onclick="slide('hand', 1)"></span>
+                </div>
                 <h3>Accessories</h3>
                 <div id="accessories-slider-container" class="slider-container">
                     <span class="arrow left" onclick="slide('accessories', -1)"></span>
@@ -196,170 +214,270 @@
 
     <script>
         const directoryContents = {
-
-            "cloth" : [
-    "https://pixisolana.github.io/cloth/none.png",
-    "https://pixisolana.github.io/cloth/1.png",
-    "https://pixisolana.github.io/cloth/2.png",
-    "https://pixisolana.github.io/cloth/3.png",
-    "https://pixisolana.github.io/cloth/4.png",
-    "https://pixisolana.github.io/cloth/5.png",
-    "https://pixisolana.github.io/cloth/6.png",
-    "https://pixisolana.github.io/cloth/7.png",
-    "https://pixisolana.github.io/cloth/8.png",
-    "https://pixisolana.github.io/cloth/9.png",
-    "https://pixisolana.github.io/cloth/10.png",
-    "https://pixisolana.github.io/cloth/11.png",
-    "https://pixisolana.github.io/cloth/12.png",
-    "https://pixisolana.github.io/cloth/13.png",
-    "https://pixisolana.github.io/cloth/14.png",
-    "https://pixisolana.github.io/cloth/15.png",
-    "https://pixisolana.github.io/cloth/16.png",
-    "https://pixisolana.github.io/cloth/17.png",
-    "https://pixisolana.github.io/cloth/18.png",
-    "https://pixisolana.github.io/cloth/19.png",
-    "https://pixisolana.github.io/cloth/20.png",
-    "https://pixisolana.github.io/cloth/21.png",
-    "https://pixisolana.github.io/cloth/22.png",
-    "https://pixisolana.github.io/cloth/23.png",
-    "https://pixisolana.github.io/cloth/24.png",
-    "https://pixisolana.github.io/cloth/25.png",
-    "https://pixisolana.github.io/cloth/26.png",
-    "https://pixisolana.github.io/cloth/27.png",
-    "https://pixisolana.github.io/cloth/28.png",
-    "https://pixisolana.github.io/cloth/29.png",
-    "https://pixisolana.github.io/cloth/30.png",
-    "https://pixisolana.github.io/cloth/31.png",
-    "https://pixisolana.github.io/cloth/32.png",
-    "https://pixisolana.github.io/cloth/33.png",
-    "https://pixisolana.github.io/cloth/34.png",
-    "https://pixisolana.github.io/cloth/35.png",
-    "https://pixisolana.github.io/cloth/36.png",
-    "https://pixisolana.github.io/cloth/37.png",
-    "https://pixisolana.github.io/cloth/38.png",
-    "https://pixisolana.github.io/cloth/39.png",
-    "https://pixisolana.github.io/cloth/40.png",
-    "https://pixisolana.github.io/cloth/41.png",
-    "https://pixisolana.github.io/cloth/42.png",
-    "https://pixisolana.github.io/cloth/43.png",
-    "https://pixisolana.github.io/cloth/44.png",
-    "https://pixisolana.github.io/cloth/45.png",
-    "https://pixisolana.github.io/cloth/46.png",
-    "https://pixisolana.github.io/cloth/47.png"
-],
-"head" : [
-    "https://pixisolana.github.io/head/none.png",
-    "https://pixisolana.github.io/head/1.png",
-    "https://pixisolana.github.io/head/2.png",
-    "https://pixisolana.github.io/head/3.png",
-    "https://pixisolana.github.io/head/4.png",
-    "https://pixisolana.github.io/head/5.png",
-    "https://pixisolana.github.io/head/6.png",
-    "https://pixisolana.github.io/head/7.png",
-    "https://pixisolana.github.io/head/8.png",
-    "https://pixisolana.github.io/head/9.png",
-    "https://pixisolana.github.io/head/10.png",
-    "https://pixisolana.github.io/head/11.png",
-    "https://pixisolana.github.io/head/12.png",
-    "https://pixisolana.github.io/head/13.png",
-    "https://pixisolana.github.io/head/14.png",
-    "https://pixisolana.github.io/head/15.png",
-    "https://pixisolana.github.io/head/16.png",
-    "https://pixisolana.github.io/head/17.png",
-    "https://pixisolana.github.io/head/18.png",
-    "https://pixisolana.github.io/head/19.png",
-    "https://pixisolana.github.io/head/20.png",
-    "https://pixisolana.github.io/head/21.png",
-    "https://pixisolana.github.io/head/22.png",
-    "https://pixisolana.github.io/head/23.png",
-    "https://pixisolana.github.io/head/24.png",
-    "https://pixisolana.github.io/head/25.png",
-    "https://pixisolana.github.io/head/26.png",
-    "https://pixisolana.github.io/head/27.png",
-    "https://pixisolana.github.io/head/28.png",
-    "https://pixisolana.github.io/head/29.png",
-    "https://pixisolana.github.io/head/30.png",
-    "https://pixisolana.github.io/head/31.png",
-    "https://pixisolana.github.io/head/33.png",
-    "https://pixisolana.github.io/head/34.png",
-    "https://pixisolana.github.io/head/35.png",
-    "https://pixisolana.github.io/head/36.png",
-    "https://pixisolana.github.io/head/37.png",
-    "https://pixisolana.github.io/head/38.png",
-    "https://pixisolana.github.io/head/39.png",
-    "https://pixisolana.github.io/head/40.png",
-    "https://pixisolana.github.io/head/41.png",
-    "https://pixisolana.github.io/head/43.png",
-    "https://pixisolana.github.io/head/44.png",
-    "https://pixisolana.github.io/head/45.png",
-    "https://pixisolana.github.io/head/46.png",
-    "https://pixisolana.github.io/head/47.png"
-],
-"skin" : [
-    "https://pixisolana.github.io/skin/none.png",
-    "https://pixisolana.github.io/skin/0xcross skin.png",
-    "https://pixisolana.github.io/skin/agne skin.png",
-    "https://pixisolana.github.io/skin/artchick skin.png",
-    "https://pixisolana.github.io/skin/base skin.png",
-    "https://pixisolana.github.io/skin/bear-skin.png",
-    "https://pixisolana.github.io/skin/bobby skin.png",
-    "https://pixisolana.github.io/skin/erik stevans skin.png",
-    "https://pixisolana.github.io/skin/leonardo dicrypto skin.png",
-    "https://pixisolana.github.io/skin/mrpunk skin.png",
-    "https://pixisolana.github.io/skin/optimus skin.png"
-],
-"accessories" : [
-    "https://pixisolana.github.io/accessories/none.png",
-    "https://pixisolana.github.io/accessories/1.png",
-    "https://pixisolana.github.io/accessories/2.png",
-    "https://pixisolana.github.io/accessories/3.png",
-    "https://pixisolana.github.io/accessories/4.png",
-    "https://pixisolana.github.io/accessories/5.png",
-    "https://pixisolana.github.io/accessories/6.png",
-    "https://pixisolana.github.io/accessories/7.png",
-    "https://pixisolana.github.io/accessories/8.png",
-    "https://pixisolana.github.io/accessories/9.png",
-    "https://pixisolana.github.io/accessories/10.png",
-    "https://pixisolana.github.io/accessories/11.png",
-    "https://pixisolana.github.io/accessories/12.png",
-    "https://pixisolana.github.io/accessories/13.png",
-    "https://pixisolana.github.io/accessories/14.png",
-    "https://pixisolana.github.io/accessories/15.png",
-    "https://pixisolana.github.io/accessories/16.png",
-    "https://pixisolana.github.io/accessories/17.png",
-    "https://pixisolana.github.io/accessories/18.png",
-    "https://pixisolana.github.io/accessories/19.png",
-    "https://pixisolana.github.io/accessories/20.png",
-    "https://pixisolana.github.io/accessories/21.png",
-    "https://pixisolana.github.io/accessories/22.png",
-    "https://pixisolana.github.io/accessories/23.png",
-    "https://pixisolana.github.io/accessories/24.png",
-    "https://pixisolana.github.io/accessories/25.png",
-    "https://pixisolana.github.io/accessories/26.png",
-    "https://pixisolana.github.io/accessories/27.png",
-    "https://pixisolana.github.io/accessories/28.png",
-    "https://pixisolana.github.io/accessories/29.png",
-    "https://pixisolana.github.io/accessories/30.png",
-    "https://pixisolana.github.io/accessories/31.png",
-    "https://pixisolana.github.io/accessories/32.png",
-    "https://pixisolana.github.io/accessories/33.png",
-    "https://pixisolana.github.io/accessories/34.png",
-    "https://pixisolana.github.io/accessories/35.png"
-],
-"bg" : [
-    "https://pixisolana.github.io/bg/none.png",
-    "https://pixisolana.github.io/bg/base-bg.jpg",
-    "https://pixisolana.github.io/bg/bg-2.jpg",
-    "https://pixisolana.github.io/bg/bg-3.jpg",
-    "https://pixisolana.github.io/bg/bg-4.jpg",
-    "https://pixisolana.github.io/bg/bg-5.jpg"
-]        };
+            "background": [
+                "https://pixisolana.github.io/pixi-gen-052624/background/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/background/1.png",
+                "https://pixisolana.github.io/pixi-gen-052624/background/2.png",
+                "https://pixisolana.github.io/pixi-gen-052624/background/3.png",
+                "https://pixisolana.github.io/pixi-gen-052624/background/4.png",
+                "https://pixisolana.github.io/pixi-gen-052624/background/5.png"
+            ],
+            "clothes": [
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/1.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/2.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/3.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/4.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/5.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/6.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/7.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/8.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/9.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/10.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/11.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/12.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/13.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/14.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/15.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/16.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/17.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/18.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/19.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/20.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/21.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/22.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/23.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/24.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/25.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/26.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/27.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/28.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/29.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/30.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/31.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/32.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/33.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/34.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/35.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/36.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/37.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/38.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/39.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/40.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/41.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/42.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/43.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/44.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/45.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/46.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/47.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/48.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/49.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/50.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/51.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/52.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/53.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/54.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/55.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/56.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/57.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/58.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/59.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/60.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/61.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/62.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/63.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/64.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/65.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/66.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/67.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/68.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/69.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/70.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/71.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/72.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/73.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/74.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/75.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/76.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/77.png",
+                "https://pixisolana.github.io/pixi-gen-052624/clothes/78.png"
+            ],
+            "eyes": [
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/1.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/2.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/3.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/4.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/5.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/6.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/7.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/8.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/9.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/10.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/11.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/12.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/13.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/14.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/15.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/16.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/17.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/18.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/19.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/20.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/21.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/22.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/23.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/24.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/25.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/26.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/27.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/28.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/29.png",
+                "https://pixisolana.github.io/pixi-gen-052624/eyes/30.png"
+            ],
+            "hand": [
+                "https://pixisolana.github.io/pixi-gen-052624/hand/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/1.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/2.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/3.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/4.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/5.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/6.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/7.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/8.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/9.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/10.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/11.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/12.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/13.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/14.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/15.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/16.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/17.png",
+                "https://pixisolana.github.io/pixi-gen-052624/hand/18.png"
+            ],
+            "head": [
+                "https://pixisolana.github.io/pixi-gen-052624/head/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/1.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/2.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/3.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/4.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/5.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/6.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/7.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/8.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/9.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/10.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/11.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/12.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/13.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/14.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/15.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/16.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/17.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/18.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/19.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/20.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/21.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/22.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/23.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/24.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/25.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/26.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/27.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/28.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/29.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/30.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/31.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/32.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/33.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/34.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/35.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/36.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/37.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/38.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/39.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/40.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/41.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/42.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/43.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/44.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/45.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/46.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/47.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/48.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/49.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/50.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/51.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/52.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/53.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/54.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/55.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/56.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/57.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/58.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/59.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/60.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/61.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/62.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/63.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/64.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/65.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/66.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/67.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/68.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/69.png",
+                "https://pixisolana.github.io/pixi-gen-052624/head/70.png"
+            ],
+            "mouth": [
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/1.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/2.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/3.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/4.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/5.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/6.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/7.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/8.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/9.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/10.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/11.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/12.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/13.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/14.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/15.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/16.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/17.png",
+                "https://pixisolana.github.io/pixi-gen-052624/mouth/18.png"
+            ],
+            "skin": [
+                "https://pixisolana.github.io/pixi-gen-052624/skin/none.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/0xcross skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/agne skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/artchick skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/base skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/bear-skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/bobby skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/cat-skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/erik stevans skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/leonardo dicrypto skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/mrpunk skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/optimus skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/patty-skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/pikachu-skin.png",
+                "https://pixisolana.github.io/pixi-gen-052624/skin/spliffy-skin.png"
+            ]
+        };
 
         let selectedTraits = {
             bg: "https://pixisolana.github.io/bg/base-bg.jpg",
             skin: "https://pixisolana.github.io/skin/base skin.png",
             head: "",
-            cloth: "",
+            clothes: "",
+            eyes: "",
+            mouth: "",
+            hand: "",
             accessories: ""
         };
 
@@ -367,7 +485,10 @@
             bg: 0,
             skin: 0,
             head: 0,
-            cloth: 0,
+            clothes: 0,
+            eyes: 0,
+            mouth: 0,
+            hand: 0,
             accessories: 0
         };
 
@@ -417,13 +538,16 @@
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
 
-            const { bg, skin, head, cloth, accessories } = selectedTraits;
+            const { bg, skin, head, clothes, eyes, mouth, hand, accessories } = selectedTraits;
 
             const images = await Promise.all([
                 bg ? loadImage(bg) : null,
                 skin ? loadImage(skin) : null,
                 head ? loadImage(head) : null,
-                cloth ? loadImage(cloth) : null,
+                clothes ? loadImage(clothes) : null,
+                eyes ? loadImage(eyes) : null,
+                mouth ? loadImage(mouth) : null,
+                hand ? loadImage(hand) : null,
                 accessories ? loadImage(accessories) : null
             ]);
 
@@ -440,13 +564,16 @@
             const canvas = document.getElementById('hiddenCanvas');
             const context = canvas.getContext('2d');
 
-            const { bg, skin, head, cloth, accessories } = selectedTraits;
+            const { bg, skin, head, clothes, eyes, mouth, hand, accessories } = selectedTraits;
 
             const images = await Promise.all([
                 bg ? loadImage(bg) : null,
                 skin ? loadImage(skin) : null,
                 head ? loadImage(head) : null,
-                cloth ? loadImage(cloth) : null,
+                clothes ? loadImage(clothes) : null,
+                eyes ? loadImage(eyes) : null,
+                mouth ? loadImage(mouth) : null,
+                hand ? loadImage(hand) : null,
                 accessories ? loadImage(accessories) : null
             ]);
 
@@ -473,7 +600,10 @@
             selectedTraits.bg = "https://pixisolana.github.io/bg/base-bg.jpg";
             selectedTraits.skin = "https://pixisolana.github.io/skin/base skin.png";
             selectedTraits.head = "";
-            selectedTraits.cloth = "";
+            selectedTraits.clothes = "";
+            selectedTraits.eyes = "";
+            selectedTraits.mouth = "";
+            selectedTraits.hand = "";
             selectedTraits.accessories = "";
             updateTraits();
         }
@@ -482,23 +612,22 @@
             const getRandomTrait = (category) => {
                 const options = directoryContents[category];
                 const randomIndex = Math.floor(Math.random() * options.length);
-                if (randomIndex == 0) {
-                    randomPFP()
-                } else {
-                    return `${category}/${options[randomIndex]}`;
-                }
+                return options[randomIndex];
             };
 
             selectedTraits.bg = getRandomTrait('bg');
             selectedTraits.skin = getRandomTrait('skin');
             selectedTraits.head = getRandomTrait('head');
-            selectedTraits.cloth = getRandomTrait('cloth');
+            selectedTraits.clothes = getRandomTrait('clothes');
+            selectedTraits.eyes = getRandomTrait('eyes');
+            selectedTraits.mouth = getRandomTrait('mouth');
+            selectedTraits.hand = getRandomTrait('hand');
             selectedTraits.accessories = getRandomTrait('accessories');
             updateTraits();
         }
 
         function showTraitSlider(trait) {
-            const traitContainers = ['bg', 'skin', 'head', 'cloth', 'accessories'];
+            const traitContainers = ['bg', 'skin', 'head', 'clothes', 'eyes', 'mouth', 'hand', 'accessories'];
             traitContainers.forEach(container => {
                 document.getElementById(`${container}-slider-container`).classList.add('d-none');
             });
@@ -512,7 +641,10 @@
             createSlider('bg-slider', directoryContents.bg, 'bg');
             createSlider('skin-slider', directoryContents.skin, 'skin');
             createSlider('head-slider', directoryContents.head, 'head');
-            createSlider('cloth-slider', directoryContents.cloth, 'cloth');
+            createSlider('cloth-slider', directoryContents.clothes, 'clothes');
+            createSlider('eyes-slider', directoryContents.eyes, 'eyes');
+            createSlider('mouth-slider', directoryContents.mouth, 'mouth');
+            createSlider('hand-slider', directoryContents.hand, 'hand');
             createSlider('accessories-slider', directoryContents.accessories, 'accessories');
 
             // Set default selections
