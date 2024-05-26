@@ -159,10 +159,10 @@
             </div>
             <div class="col-lg-6">
                 <h3>Background</h3>
-                <div id="bg-slider-container" class="slider-container">
-                    <span class="arrow left" onclick="slide('bg', -1)"></span>
-                    <div id="bg-slider" class="slider"></div>
-                    <span class="arrow right" onclick="slide('bg', 1)"></span>
+                <div id="background-slider-container" class="slider-container">
+                    <span class="arrow left" onclick="slide('background', -1)"></span>
+                    <div id="background-slider" class="slider"></div>
+                    <span class="arrow right" onclick="slide('background', 1)"></span>
                 </div>
                 <h3>Skin</h3>
                 <div id="skin-slider-container" class="slider-container">
@@ -177,10 +177,10 @@
                     <span class="arrow right" onclick="slide('head', 1)"></span>
                 </div>
                 <h3>Clothes</h3>
-                <div id="cloth-slider-container" class="slider-container">
-                    <span class="arrow left" onclick="slide('cloth', -1)"></span>
-                    <div id="cloth-slider" class="slider"></div>
-                    <span class="arrow right" onclick="slide('cloth', 1)"></span>
+                <div id="clothes-slider-container" class="slider-container">
+                    <span class="arrow left" onclick="slide('clothes', -1)"></span>
+                    <div id="clothes-slider" class="slider"></div>
+                    <span class="arrow right" onclick="slide('clothes', 1)"></span>
                 </div>
                 <h3>Eyes</h3>
                 <div id="eyes-slider-container" class="slider-container">
@@ -199,12 +199,6 @@
                     <span class="arrow left" onclick="slide('hand', -1)"></span>
                     <div id="hand-slider" class="slider"></div>
                     <span class="arrow right" onclick="slide('hand', 1)"></span>
-                </div>
-                <h3>Accessories</h3>
-                <div id="accessories-slider-container" class="slider-container">
-                    <span class="arrow left" onclick="slide('accessories', -1)"></span>
-                    <div id="accessories-slider" class="slider"></div>
-                    <span class="arrow right" onclick="slide('accessories', 1)"></span>
                 </div>
             </div>
         </div>
@@ -362,7 +356,6 @@
                 "https://pixisolana.github.io/pixi-gen-052624/head/1.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/2.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/3.png",
-                "https://pixisolana.github.io/pixi-gen-052624/head/4.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/5.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/6.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/7.png",
@@ -390,7 +383,6 @@
                 "https://pixisolana.github.io/pixi-gen-052624/head/29.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/30.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/31.png",
-                "https://pixisolana.github.io/pixi-gen-052624/head/32.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/33.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/34.png",
                 "https://pixisolana.github.io/pixi-gen-052624/head/35.png",
@@ -471,29 +463,31 @@
         };
 
         let selectedTraits = {
-            bg: "https://pixisolana.github.io/bg/base-bg.jpg",
-            skin: "https://pixisolana.github.io/skin/base skin.png",
+            background: "https://pixisolana.github.io/pixi-gen-052624/background/5.png",
+            skin: "https://pixisolana.github.io/pixi-gen-052624/skin/base skin.png",
             head: "",
             clothes: "",
             eyes: "",
             mouth: "",
-            hand: "",
-            accessories: ""
+            hand: ""
         };
 
         let sliderIndices = {
-            bg: 0,
+            background: 0,
             skin: 0,
             head: 0,
             clothes: 0,
             eyes: 0,
             mouth: 0,
-            hand: 0,
-            accessories: 0
+            hand: 0
         };
 
         function createSlider(sliderId, options, category) {
             const slider = document.getElementById(sliderId);
+            if (!options) {
+                console.error(`Options for category "${category}" are undefined.`);
+                return;
+            }
             options.forEach(option => {
                 const img = document.createElement('img');
                 img.src = `${option}`;
@@ -538,17 +532,16 @@
             const canvas = document.getElementById('canvas');
             const context = canvas.getContext('2d');
 
-            const { bg, skin, head, clothes, eyes, mouth, hand, accessories } = selectedTraits;
+            const { background, skin, head, clothes, eyes, mouth, hand } = selectedTraits;
 
             const images = await Promise.all([
-                bg ? loadImage(bg) : null,
+                background ? loadImage(background) : null,
                 skin ? loadImage(skin) : null,
                 head ? loadImage(head) : null,
                 clothes ? loadImage(clothes) : null,
                 eyes ? loadImage(eyes) : null,
                 mouth ? loadImage(mouth) : null,
-                hand ? loadImage(hand) : null,
-                accessories ? loadImage(accessories) : null
+                hand ? loadImage(hand) : null
             ]);
 
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -564,17 +557,16 @@
             const canvas = document.getElementById('hiddenCanvas');
             const context = canvas.getContext('2d');
 
-            const { bg, skin, head, clothes, eyes, mouth, hand, accessories } = selectedTraits;
+            const { background, skin, head, clothes, eyes, mouth, hand } = selectedTraits;
 
             const images = await Promise.all([
-                bg ? loadImage(bg) : null,
+                background ? loadImage(background) : null,
                 skin ? loadImage(skin) : null,
                 head ? loadImage(head) : null,
                 clothes ? loadImage(clothes) : null,
                 eyes ? loadImage(eyes) : null,
                 mouth ? loadImage(mouth) : null,
-                hand ? loadImage(hand) : null,
-                accessories ? loadImage(accessories) : null
+                hand ? loadImage(hand) : null
             ]);
 
             context.clearRect(0, 0, canvas.width, canvas.height);
@@ -597,37 +589,52 @@
         }
 
         function resetPFP() {
-            selectedTraits.bg = "https://pixisolana.github.io/bg/base-bg.jpg";
-            selectedTraits.skin = "https://pixisolana.github.io/skin/base skin.png";
+            selectedTraits.background = "https://pixisolana.github.io/pixi-gen-052624/background/5.png";
+            selectedTraits.skin = "https://pixisolana.github.io/pixi-gen-052624/skin/base skin.png";
             selectedTraits.head = "";
             selectedTraits.clothes = "";
             selectedTraits.eyes = "";
             selectedTraits.mouth = "";
             selectedTraits.hand = "";
-            selectedTraits.accessories = "";
             updateTraits();
         }
 
         function randomPFP() {
             const getRandomTrait = (category) => {
                 const options = directoryContents[category];
+                if (!options) {
+                    console.error(`Options for category "${category}" are undefined.`);
+                    return "";
+                }
                 const randomIndex = Math.floor(Math.random() * options.length);
                 return options[randomIndex];
             };
 
-            selectedTraits.bg = getRandomTrait('bg');
+            selectedTraits.background = getRandomTrait('background');
             selectedTraits.skin = getRandomTrait('skin');
             selectedTraits.head = getRandomTrait('head');
             selectedTraits.clothes = getRandomTrait('clothes');
             selectedTraits.eyes = getRandomTrait('eyes');
             selectedTraits.mouth = getRandomTrait('mouth');
             selectedTraits.hand = getRandomTrait('hand');
-            selectedTraits.accessories = getRandomTrait('accessories');
-            updateTraits();
+
+            // Retry if any selected trait is the first option (none.png)
+            if (selectedTraits.background === directoryContents.background[0] ||
+                selectedTraits.skin === directoryContents.skin[0] ||
+                selectedTraits.head === directoryContents.head[0] ||
+                selectedTraits.clothes === directoryContents.clothes[0] ||
+                selectedTraits.eyes === directoryContents.eyes[0] ||
+                selectedTraits.mouth === directoryContents.mouth[0] ||
+                selectedTraits.hand === directoryContents.hand[0]) {
+                randomPFP();  // Retry
+            } else {
+                updateTraits();
+            }
         }
 
+
         function showTraitSlider(trait) {
-            const traitContainers = ['bg', 'skin', 'head', 'clothes', 'eyes', 'mouth', 'hand', 'accessories'];
+            const traitContainers = ['background', 'skin', 'head', 'clothes', 'eyes', 'mouth', 'hand'];
             traitContainers.forEach(container => {
                 document.getElementById(`${container}-slider-container`).classList.add('d-none');
             });
@@ -638,14 +645,13 @@
 
         // Populate sliders on page load
         window.onload = () => {
-            createSlider('bg-slider', directoryContents.bg, 'bg');
+            createSlider('background-slider', directoryContents.background, 'background');
             createSlider('skin-slider', directoryContents.skin, 'skin');
             createSlider('head-slider', directoryContents.head, 'head');
-            createSlider('cloth-slider', directoryContents.clothes, 'clothes');
+            createSlider('clothes-slider', directoryContents.clothes, 'clothes');
             createSlider('eyes-slider', directoryContents.eyes, 'eyes');
             createSlider('mouth-slider', directoryContents.mouth, 'mouth');
             createSlider('hand-slider', directoryContents.hand, 'hand');
-            createSlider('accessories-slider', directoryContents.accessories, 'accessories');
 
             // Set default selections
             updateTraits();
