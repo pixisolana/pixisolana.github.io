@@ -491,6 +491,7 @@
             options.forEach(option => {
                 const img = document.createElement('img');
                 img.src = `${option}`;
+                img.src.crossOrigin = "anonymous";
                 img.alt = option.replace('.png', '').replace('.jpg', '');
                 img.onclick = () => selectTrait(category, img.src);
                 slider.appendChild(img);
