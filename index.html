@@ -34,9 +34,11 @@
             padding-top: 20px;
             padding-bottom: 20px;
             display: flex; 
-            overflow: hidden; 
             justify-content: center;
             width: 100%;
+            overflow-x: scroll;
+            justify-content: flex-start;
+
         }
         .slider img {
             max-width: 100px;
@@ -44,18 +46,10 @@
             margin: 0 5px;
             padding: 5px;
             border: 2px dashed #fff;
-            width: calc(25% - 20px);
         }
         .arrow { 
-            position: absolute; 
-            top: 50%; 
-            transform: translateY(-50%); 
-            font-size: 2em; 
-            cursor: pointer; 
-            color: #333;
+            display: none; /* Hide arrows */
         }
-        .arrow.left { left: -35px; }
-        .arrow.right { right: -35px; }
         button {
             margin: 10px;
             padding: 10px 20px;
@@ -123,16 +117,6 @@
             width: 25px;
             height: 39px;
         }
-        .arrow.left {
-            background-image: url("https://pixisolana.github.io//L_ARROW.png");
-            background-position: center;
-            background-repeat: no-repeat;
-        }
-        .arrow.right {
-            background-image: url("https://pixisolana.github.io//R_ARROW.png");
-            background-position: center;
-            background-repeat: no-repeat;
-        }
         @media (min-width: 1200px) {
             .container, .container-lg, .container-md, .container-sm, .container-xl {
                 max-width: 1400px;
@@ -178,45 +162,31 @@
         <div class="col-lg-6">
             <h3>Background</h3>
             <div id="background-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('background', -1)"></span>
                 <div id="background-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('background', 1)"></span>
             </div>
             <h3>Skin</h3>
             <div id="skin-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('skin', -1)"></span>
                 <div id="skin-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('skin', 1)"></span>
             </div>
             <h3>Head</h3>
             <div id="head-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('head', -1)"></span>
                 <div id="head-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('head', 1)"></span>
             </div>
             <h3>Clothes</h3>
             <div id="clothes-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('clothes', -1)"></span>
                 <div id="clothes-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('clothes', 1)"></span>
             </div>
             <h3>Eyes</h3>
             <div id="eyes-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('eyes', -1)"></span>
                 <div id="eyes-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('eyes', 1)"></span>
             </div>
             <h3>Mouth</h3>
             <div id="mouth-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('mouth', -1)"></span>
                 <div id="mouth-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('mouth', 1)"></span>
             </div>
             <h3>Hand</h3>
             <div id="hand-slider-container" class="slider-container">
-                <span class="arrow left" onclick="slide('hand', -1)"></span>
                 <div id="hand-slider" class="slider"></div>
-                <span class="arrow right" onclick="slide('hand', 1)"></span>
             </div>
         </div>
     </div>
@@ -513,23 +483,6 @@
             img.onclick = () => selectTrait(category, img.src);
             slider.appendChild(img);
         });
-        updateSlider(sliderId, category);
-    }
-
-    function updateSlider(sliderId, category) {
-        const slider = document.getElementById(sliderId);
-        const startIndex = sliderIndices[category];
-        const endIndex = startIndex + 4;
-
-        Array.from(slider.children).forEach((child, index) => {
-            child.style.display = (index >= startIndex && index < endIndex) ? 'block' : 'none';
-        });
-    }
-
-    function slide(category, direction) {
-        const maxIndex = directoryContents[category].length - 4;
-        sliderIndices[category] = Math.min(Math.max(sliderIndices[category] + direction * 4, 0), maxIndex);
-        updateSlider(`${category}-slider`, category);
     }
 
     function selectTrait(category, src) {
@@ -654,10 +607,10 @@
     function showTraitSlider(trait) {
         const traitContainers = ['background', 'skin', 'head', 'clothes', 'eyes', 'mouth', 'hand'];
         traitContainers.forEach(container => {
-            document.getElementById(`${container}-slider-container`).classList.add('d-none');
+           //document.getElementById(`${container}-slider-container`).classList.add('d-none');
         });
         if (trait) {
-            document.getElementById(`${trait}-slider-container`).classList.remove('d-none');
+            //document.getElementById(`${trait}-slider-container`).classList.remove('d-none');
         }
     }
 
