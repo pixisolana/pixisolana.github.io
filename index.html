@@ -41,14 +41,29 @@
 
         }
         .slider img {
-            max-width: 100px;
             cursor: pointer;
             margin: 0 5px;
             padding: 5px;
             border: 2px dashed #fff;
+            width: calc(25% - 10px);
         }
         .arrow { 
             display: none; /* Hide arrows */
+        }
+        /* width */
+        .slider::-webkit-scrollbar {
+        width: 12px;
+        }
+
+        /* Track */
+        .slider::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 2px rgba(255,255,255,0.7);
+        }
+
+        /* Handle */
+        .slider::-webkit-scrollbar-thumb {
+        background: #fff;
+        height: 5px;
         }
         button {
             margin: 10px;
