@@ -52,7 +52,7 @@
         }
         /* width */
         .slider::-webkit-scrollbar {
-        width: 12px !important;
+        width: 100px !important;
         }
 
         /* Track */
@@ -124,6 +124,12 @@
             align-items: center;
             justify-content: center;
             flex-direction: column;
+            top: 0px;
+    position: sticky;
+    z-index: 2;
+    background-color: #9ab5ff;
+    border-bottom: 1px solid #fff;
+    height: 100%;
         }
         @media (min-width: 992px) {
             .canvas-wrapper {
@@ -139,6 +145,7 @@
             }
             .screen-side {
                 justify-content: flex-start;
+                border-bottom: none;
             }
             .slider-container { 
                 position: relative; 
