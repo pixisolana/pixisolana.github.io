@@ -206,15 +206,9 @@
                 <button type="button" onclick="resetPFP()">Reset</button>
                 <button type="button" onclick="randomPFP()">Random</button>
                 <button type="button" onclick="uploadBG()">Upload Background</button>
-                <button type="button" onclick="startJumpAnimation()">Jump Animate</button>
-                <button type="button" onclick="startPeekAnimation()">Peek Animate</button>
-
-
-                <button type="button" onclick="downloadJumpAnimation()">Download Jump Animation</button>
-                <button type="button" onclick="downloadPeekAnimation()">Download Peek Animation</button>
-
-
                 <div class="small-info">(Recommended 1080px x 1080px)</div>
+                
+                <button type="button" onclick="uploadBG()">Upload Background</button>
             </div>
         </div>
         <div class="col-lg-6 mt-3">
@@ -539,7 +533,6 @@
     function createSlider(sliderId, options, category) {
         const slider = document.getElementById(sliderId);
         if (!options) {
-            console.error(`Options for category "${category}" are undefined.`);
             return;
         }
         options.forEach(option => {
@@ -587,7 +580,6 @@
         if (images[0]) context.drawImage(images[0], 0, 0, canvas.width, canvas.height);
 
         context.save();
-        console.log('Applying transform:', transform);
         context.setTransform(...transform);
 
         for (let i = 1; i < images.length; i++) {
@@ -615,7 +607,6 @@
         if (!peekAnimationStartTime) peekAnimationStartTime = timestamp;
 
         if (typeof timestamp !== 'number') {
-            console.error('Invalid timestamp:', timestamp);
             stopPeekAnimation();
             return;
         }
@@ -624,13 +615,11 @@
         const elapsed = timestamp - peekAnimationStartTime;
 
         if (typeof elapsed !== 'number' || elapsed < 0) {
-            console.error('Invalid elapsed time:', elapsed);
             stopPeekAnimation();
             return;
         }
 
         const progress = elapsed / duration;
-        console.log('Progress:', progress);
 
         const startX = -document.getElementById('canvas').width;
         const startY = document.getElementById('canvas').height;
@@ -640,11 +629,7 @@
         const translateX = startX + (endX - startX) * progress;
         const translateY = startY + (endY - startY) * progress;
 
-        console.log('TranslateX:', translateX);
-        console.log('TranslateY:', translateY);
-
         if (isNaN(progress) || isNaN(translateX) || isNaN(translateY)) {
-            console.error('Invalid transformation parameters:', { translateX, translateY });
             stopPeekAnimation();
             return;
         }
@@ -662,8 +647,6 @@
             translateX,
             translateY
         ];
-
-        console.log('Transform:', transform);
 
         updateTraits(0, transform);
 
@@ -691,7 +674,6 @@
         if (!jumpAnimationStartTime) jumpAnimationStartTime = timestamp;
 
         if (typeof timestamp !== 'number') {
-            console.error('Invalid timestamp:', timestamp);
             stopJumpAnimation();
             return;
         }
@@ -701,7 +683,6 @@
         const elapsed = timestamp - jumpAnimationStartTime;
 
         if (typeof elapsed !== 'number' || elapsed < 0) {
-            console.error('Invalid elapsed time:', elapsed);
             stopJumpAnimation();
             return;
         }
@@ -783,7 +764,6 @@
         const getRandomTrait = (category) => {
             const options = directoryContents[category];
             if (!options) {
-                console.error(`Options for category "${category}" are undefined.`);
                 return "";
             }
             const randomIndex = Math.floor(Math.random() * options.length);
