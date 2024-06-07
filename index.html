@@ -9,9 +9,9 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gif.js/0.2.0/gif.js"></script>
+    <script src="./gifler.js"></script>
     <script src="./gif.worker.js"></script>
 
-    
     <style>
         /* Existing styles */
         body { 
@@ -41,7 +41,6 @@
             width: 100%;
             overflow-x: scroll;
             justify-content: flex-start;
-
         }
         .slider img {
             cursor: pointer;
@@ -192,13 +191,12 @@
             margin-bottom: 10px;
         }
     </style>
-
 </head>
 <body>
 <div class="container">
     <div class="row">
         <div class="col-lg-6 screen-side">
-            <div class="canvas-wrapper">
+            <div class="canvas-wrapper" id="canvas-container">
                 <canvas id="canvas" width="300" height="300"></canvas>
             </div>
             <div class="col-buttons">
@@ -207,8 +205,6 @@
                 <button type="button" onclick="randomPFP()">Random</button>
                 <button type="button" onclick="uploadBG()">Upload Background</button>
                 <div class="small-info">(Recommended 1080px x 1080px)</div>
-                
-                <button type="button" onclick="uploadBG()">Upload Background</button>
             </div>
         </div>
         <div class="col-lg-6 mt-3">
@@ -239,6 +235,10 @@
             <h3>Hand</h3>
             <div id="hand-slider-container" class="slider-container">
                 <div id="hand-slider" class="slider"></div>
+            </div>
+            <h3>Pets</h3>
+            <div id="pets-slider-container" class="slider-container">
+                <div id="pets-slider" class="slider"></div>
             </div>
         </div>
     </div>
@@ -499,6 +499,11 @@
             "https://pixisolana.github.io/pixi-gen-052624/skin/patty-skin.png",
             "https://pixisolana.github.io/pixi-gen-052624/skin/pikachu-skin.png",
             "https://pixisolana.github.io/pixi-gen-052624/skin/spliffy-skin.png"
+        ],
+        "pets": [
+            "https://pixisolana.github.io/pixi-gen-052624/pets/cat.gif",
+            "https://pixisolana.github.io/pixi-gen-052624/pets/gorilla.gif",
+            "https://pixisolana.github.io/pixi-gen-052624/pets/dragon.gif"
         ]
     };
 
@@ -509,7 +514,8 @@
         clothes: "",
         eyes: "",
         mouth: "",
-        hand: ""
+        hand: "",
+        pets: ""
     };
 
     let sliderIndices = {
@@ -519,7 +525,8 @@
         clothes: 0,
         eyes: 0,
         mouth: 0,
-        hand: 0
+        hand: 0,
+        pets: 0
     };
 
     let isPeekAnimating = false;
@@ -530,6 +537,21 @@
     let jumpAnimationFrameId;
     let jumpAnimationStartTime;
 
+    let bufferCanvas = document.createElement('canvas');
+    bufferCanvas.width = 300;
+    bufferCanvas.height = 300;
+    let bufferContext = bufferCanvas.getContext('2d');
+
+
+    let currentGif = null;
+let animationFrameId = null;
+let animationHandler = null;
+let currentGifInstance = null;
+let animationRunning = false; // Flag to indicate if an animation is running
+
+
+
+
     function createSlider(sliderId, options, category) {
         const slider = document.getElementById(sliderId);
         if (!options) {
@@ -538,16 +560,57 @@
         options.forEach(option => {
             const img = document.createElement('img');
             img.src = `${option}`;
-            img.alt = option.replace('.png', '').replace('.jpg', '');
+            img.alt = option.replace('.png', '').replace('.jpg', '').replace('.gif', '');
             img.onclick = () => selectTrait(category, img.src);
             slider.appendChild(img);
         });
     }
 
-    function selectTrait(category, src) {
-        selectedTraits[category] = src.includes('none.png') ? "" : src;
-        updateTraits();
+    function stopCurrentGif() {
+    // Cancel any ongoing animation frames
+    if (animationFrameId) {
+        console.log('Canceling animation frame:', animationFrameId);
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
     }
+
+    // Clear the current GIF instance
+    if (currentGifInstance) {
+        console.log('Stopping current GIF instance:', currentGifInstance);
+        currentGifInstance = null;
+    }
+
+    // Reset the canvas and get the new context
+    const context = resetCanvas();
+
+    // Update the context with the buffered canvas contents
+    context.drawImage(bufferCanvas, 0, 0);
+
+    // Set animationRunning to false to stop any ongoing animations
+    animationRunning = false;
+
+    return context; // Return the new context
+}
+
+
+function clearCanvas() {
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height); // Clear the entire canvas
+}
+
+
+function selectTrait(category, src) {
+    if (category === 'pets') {
+        console.log('Stopping current GIF for pets and resetting canvas...');
+        stopCurrentGif(); // Stop the current GIF and reset the canvas
+    }
+    selectedTraits[category] = src.includes('none.png') ? "" : src;
+    updateTraits(); // Update the canvas with the new trait
+}
+
+
+
 
     function loadImage(src) {
         return new Promise((resolve, reject) => {
@@ -558,12 +621,103 @@
             img.onerror = reject;
         });
     }
-
     async function updateTraits(offsetY = 0, transform = [1, 0, 0, 1, 0, 0]) {
-        const canvas = document.getElementById('canvas');
+    const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
+
+    const { background, skin, head, clothes, eyes, mouth, hand, pets } = selectedTraits;
+
+    const images = await Promise.all([
+        background ? loadImage(background) : null,
+        skin ? loadImage(skin) : null,
+        head ? loadImage(head) : null,
+        clothes ? loadImage(clothes) : null,
+        eyes ? loadImage(eyes) : null,
+        mouth ? loadImage(mouth) : null,
+        hand ? loadImage(hand) : null
+    ]);
+
+    // Clear the buffer canvas
+    bufferContext.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
+
+    // Draw all non-pet layers to the buffer canvas
+    if (images[0]) bufferContext.drawImage(images[0], 0, 0, bufferCanvas.width, bufferCanvas.height);
+
+    bufferContext.save();
+    bufferContext.setTransform(...transform);
+
+    for (let i = 1; i < images.length; i++) {
+        if (images[i]) {
+            bufferContext.drawImage(images[i], 0, offsetY, bufferCanvas.width, bufferCanvas.height);
+        }
+    }
+    bufferContext.restore();
+
+    // Clear the main canvas before drawing
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bufferCanvas, 0, 0);
+
+    // If there is a pet, start the new GIF
+    if (pets) {
+        console.log('Starting new pet GIF with URL:', pets);
+
+        // Ensure any previous animation is stopped
+        stopCurrentGif();
+
+        // Use gifler to handle the GIF animation
+        currentGifInstance = gifler(pets).frames(canvas, function (ctx, frame) {
+            if (!animationRunning) return; // Stop if animation should not run
+
+            // Clear the main canvas for each frame to avoid overlapping
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw the buffered non-pet layers
+            ctx.drawImage(bufferCanvas, 0, 0);
+            // Draw the current frame of the pet GIF
+            ctx.drawImage(frame.buffer, 0, 0, canvas.width, canvas.height);
+        });
+
+        // Set the flag to indicate animation is running
+        animationRunning = true;
+
+        // Control the animation loop explicitly
+        function animate() {
+            if (animationRunning) {
+                animationFrameId = requestAnimationFrame(animate); // Continue the animation loop
+            }
+        }
+
+        // Start the animation loop
+        animate();
+    }
+}
+
+
+
+function resetCanvas() {
+    const canvasContainer = document.getElementById('canvas-container');
+    const oldCanvas = document.getElementById('canvas');
+    if (oldCanvas) {
+        console.log('Removing existing canvas element...');
+        canvasContainer.removeChild(oldCanvas); // Remove the old canvas element
+    }
+    
+    // Create a new canvas element
+    const newCanvas = document.createElement('canvas');
+    newCanvas.id = 'canvas';
+    newCanvas.width = 300;
+    newCanvas.height = 300;
+    console.log('Creating and appending new canvas element...');
+    canvasContainer.appendChild(newCanvas); // Append the new canvas element
+
+    // Reinitialize the canvas context with `willReadFrequently`
+    return newCanvas.getContext('2d', { willReadFrequently: true });
+}
+
+async function updateHiddenCanvas() {
+        const canvas = document.getElementById('hiddenCanvas');
         const context = canvas.getContext('2d');
 
-        const { background, skin, head, clothes, eyes, mouth, hand } = selectedTraits;
+        const { background, skin, head, clothes, eyes, mouth, hand, pets } = selectedTraits;
 
         const images = await Promise.all([
             background ? loadImage(background) : null,
@@ -577,17 +731,18 @@
 
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        if (images[0]) context.drawImage(images[0], 0, 0, canvas.width, canvas.height);
-
-        context.save();
-        context.setTransform(...transform);
-
-        for (let i = 1; i < images.length; i++) {
-            if (images[i]) {
-                context.drawImage(images[i], 0, offsetY, canvas.width, canvas.height);
+        images.forEach(img => {
+            if (img) {
+                context.drawImage(img, 0, 0, canvas.width, canvas.height);
             }
+        });
+
+        if (pets) {
+            gifler(pets).frames(canvas, function (ctx, frame) {
+                updateHiddenCanvas();
+                ctx.drawImage(frame.buffer, 0, 0, canvas.width, canvas.height);
+            });
         }
-        context.restore();
     }
 
     function startPeekAnimation() {
@@ -713,43 +868,205 @@
         }
     }
 
+    async function updateTraits(offsetY = 0, transform = [1, 0, 0, 1, 0, 0]) {
+    // Reset and get the new canvas context
+    const context = stopCurrentGif();
 
-    async function updateHiddenCanvas() {
-        const canvas = document.getElementById('hiddenCanvas');
-        const context = canvas.getContext('2d');
+    const { background, skin, head, clothes, eyes, mouth, hand, pets } = selectedTraits;
 
-        const { background, skin, head, clothes, eyes, mouth, hand } = selectedTraits;
+    const images = await Promise.all([
+        background ? loadImage(background) : null,
+        skin ? loadImage(skin) : null,
+        head ? loadImage(head) : null,
+        clothes ? loadImage(clothes) : null,
+        eyes ? loadImage(eyes) : null,
+        mouth ? loadImage(mouth) : null,
+        hand ? loadImage(hand) : null
+    ]);
 
-        const images = await Promise.all([
-            background ? loadImage(background) : null,
-            skin ? loadImage(skin) : null,
-            head ? loadImage(head) : null,
-            clothes ? loadImage(clothes) : null,
-            eyes ? loadImage(eyes) : null,
-            mouth ? loadImage(mouth) : null,
-            hand ? loadImage(hand) : null
-        ]);
+    // Clear the buffer canvas
+    bufferContext.clearRect(0, 0, bufferCanvas.width, bufferCanvas.height);
 
-        context.clearRect(0, 0, canvas.width, canvas.height);
+    // Draw all non-pet layers to the buffer canvas
+    if (images[0]) bufferContext.drawImage(images[0], 0, 0, bufferCanvas.width, bufferCanvas.height);
 
-        images.forEach(img => {
-            if (img) {
-                context.drawImage(img, 0, 0, canvas.width, canvas.height);
-            }
-        });
+    bufferContext.save();
+    bufferContext.setTransform(...transform);
+
+    for (let i = 1; i < images.length; i++) {
+        if (images[i]) {
+            bufferContext.drawImage(images[i], 0, offsetY, bufferCanvas.width, bufferCanvas.height);
+        }
     }
+    bufferContext.restore();
 
-    async function downloadPFP() {
-        await updateHiddenCanvas();
+    // Clear the main canvas before drawing
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bufferCanvas, 0, 0);
 
+    // If there is a pet, start the new GIF
+    if (pets) {
+        console.log('Starting new pet GIF with URL:', pets);
+
+        // Use gifler to handle the GIF animation
+        currentGifInstance = gifler(pets).frames(document.getElementById('canvas'), function (ctx, frame) {
+            if (!animationRunning) return; // Stop if animation should not run
+
+            // Clear the main canvas for each frame to avoid overlapping
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw the buffered non-pet layers
+            ctx.drawImage(bufferCanvas, 0, 0);
+            // Draw the current frame of the pet GIF
+            ctx.drawImage(frame.buffer, 0, 0, canvas.width, canvas.height);
+        });
+
+        // Set the flag to indicate animation is running
+        animationRunning = true;
+    }
+}
+async function downloadPFP() {
+    if (!selectedTraits.pets) {
+        // No pet selected, download as static PNG
         const canvas = document.getElementById('hiddenCanvas');
         const link = document.createElement('a');
         link.download = 'PIXI.png';
         link.href = canvas.toDataURL();
         link.click();
+        return;
     }
 
+    // Mapping of pet GIFs to their frame counts
+    const petFrameCounts = {
+        'cat.gif': 38,
+        'gorilla.gif': 15,
+        'dragon.gif': 57
+        // Add other pets here if needed
+    };
+
+    // Determine the filename of the pet GIF from the selectedTraits.pets URL
+    const petFileName = selectedTraits.pets.split('/').pop(); // Get the file name from the URL
+
+    // Get the total frames for the selected pet
+    const totalFrames = petFrameCounts[petFileName] || 60; // Default to 60 if pet is not in the mapping
+
+    console.log(`Capturing ${totalFrames} frames for ${petFileName}`);
+
+    // Pet is selected, download as GIF
+    const gif = new GIF({
+        workers: 2,
+        quality: 10,
+        workerScript: './gif.worker.js', // Use local path to the worker script
+        width: 1080, // Set the width to 1080 for full resolution
+        height: 1080, // Set the height to 1080 for full resolution
+        repeat: 0 // Loop forever
+    });
+
+    // Use the hidden canvas for capturing frames
+    const hiddenCanvas = document.getElementById('hiddenCanvas');
+    const hiddenContext = hiddenCanvas.getContext('2d', { willReadFrequently: true });
+
+    // Set the size of the hidden canvas to full resolution
+    hiddenCanvas.width = 1080;
+    hiddenCanvas.height = 1080;
+
+    // Load non-pet traits at full resolution with cross-origin handling
+    const loadFullResolutionImage = async (src) => {
+        return new Promise((resolve, reject) => {
+            if (!src) {
+                resolve(null);
+                return;
+            }
+            const img = new Image();
+            img.crossOrigin = 'anonymous'; // Allow cross-origin images
+            img.onload = () => resolve(img);
+            img.onerror = reject;
+            img.src = src;
+        });
+    };
+
+    // Load all non-pet traits images at full resolution
+    const nonPetImages = await Promise.all([
+        selectedTraits.background ? loadFullResolutionImage(selectedTraits.background) : null,
+        selectedTraits.skin ? loadFullResolutionImage(selectedTraits.skin) : null,
+        selectedTraits.head ? loadFullResolutionImage(selectedTraits.head) : null,
+        selectedTraits.clothes ? loadFullResolutionImage(selectedTraits.clothes) : null,
+        selectedTraits.eyes ? loadFullResolutionImage(selectedTraits.eyes) : null,
+        selectedTraits.mouth ? loadFullResolutionImage(selectedTraits.mouth) : null,
+        selectedTraits.hand ? loadFullResolutionImage(selectedTraits.hand) : null
+    ]);
+
+    // Variables to keep track of frame capture
+    let frameCount = 0;
+    let frames = [];
+
+    // Capture frames for one complete loop based on the total frames
+    await new Promise((resolve, reject) => {
+        gifler(selectedTraits.pets).frames(hiddenCanvas, function (ctx, frame) {
+            if (frame.done) {
+                console.log('Frame capturing completed.');
+                resolve(); // Resolve the promise when all frames are captured
+                return;
+            }
+
+            if (frameCount < totalFrames) {
+                // Create a new canvas for each frame to avoid overwriting the previous frame
+                const frameCanvas = document.createElement('canvas');
+                frameCanvas.width = 1080;
+                frameCanvas.height = 1080;
+                const frameContext = frameCanvas.getContext('2d', { willReadFrequently: true });
+
+                // Clear the frame canvas
+                frameContext.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+
+                // Draw each non-pet trait at full resolution
+                nonPetImages.forEach(image => {
+                    if (image) {
+                        frameContext.drawImage(image, 0, 0, frameCanvas.width, frameCanvas.height);
+                    }
+                });
+
+                // Draw the current frame of the pet GIF onto the frame canvas
+                frameContext.drawImage(frame.buffer, 0, 0, frameCanvas.width, frameCanvas.height);
+
+                console.log(`Adding frame ${frameCount + 1}/${totalFrames} to GIF: delay ${frame.delay}ms`);
+
+                // Store the frame for later use
+                frames.push({ canvas: frameCanvas, delay: 150 }); // Set delay to 150 ms for each frame
+
+                frameCount++; // Increment the frame count
+            }
+
+            if (frameCount >= totalFrames) {
+                console.log('Stopping frame capture after one loop.');
+                resolve(); // Resolve the promise to stop capturing more frames
+            }
+        });
+    });
+
+    // Add frames to the GIF with a fixed delay of 150 ms
+    frames.forEach(({ canvas, delay }) => {
+        gif.addFrame(canvas, { copy: true, delay: 150 }); // Set delay to 150 ms
+    });
+
+    gif.on('finished', function (blob) {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'PIXI.gif';
+        link.click();
+    });
+
+    // Start rendering the GIF
+    gif.render();
+}
+
+
+
+
     function resetPFP() {
+        if (currentGif) {
+            currentGif.reset();
+            currentGif = null;
+        }
         selectedTraits.background = "https://pixisolana.github.io/pixi-gen-052624/background/1.png";
         selectedTraits.skin = "https://pixisolana.github.io/pixi-gen-052624/skin/base skin.png";
         selectedTraits.head = "";
@@ -757,10 +1074,15 @@
         selectedTraits.eyes = "";
         selectedTraits.mouth = "";
         selectedTraits.hand = "";
+        selectedTraits.pets = "";
         updateTraits();
     }
 
     function randomPFP() {
+        if (currentGif) {
+            currentGif.reset();
+            currentGif = null;
+        }
         const getRandomTrait = (category) => {
             const options = directoryContents[category];
             if (!options) {
@@ -777,6 +1099,7 @@
         selectedTraits.eyes = getRandomTrait('eyes');
         selectedTraits.mouth = getRandomTrait('mouth');
         selectedTraits.hand = getRandomTrait('hand');
+        selectedTraits.pets = getRandomTrait('pets');
 
         if (selectedTraits.background === directoryContents.background[0] ||
             selectedTraits.skin === directoryContents.skin[0] ||
@@ -784,7 +1107,8 @@
             selectedTraits.clothes === directoryContents.clothes[0] ||
             selectedTraits.eyes === directoryContents.eyes[0] ||
             selectedTraits.mouth === directoryContents.mouth[0] ||
-            selectedTraits.hand === directoryContents.hand[0]) {
+            selectedTraits.hand === directoryContents.hand[0] ||
+            selectedTraits.pets === directoryContents.pets[0]) {
             randomPFP();
         } else {
             updateTraits();
@@ -825,122 +1149,120 @@
     }
 
     async function downloadJumpAnimation() {
-    const canvas = document.getElementById('canvas');
-    const gif = new GIF({
-        workers: 2,
-        quality: 10,
-        workerScript: './gif.worker.js', // Specify the correct path to the worker script
-        width: canvas.width,
-        height: canvas.height
-    });
-
-    const duration = 4000; // Duration of the animation in milliseconds (1.2 seconds)
-    const frameRate = 60; // 30 frames per second
-    const totalFrames = Math.round(duration / (1000 / frameRate));
-
-    function captureFrame(offsetY) {
-        return new Promise(resolve => {
-            requestAnimationFrame(async () => {
-                await updateHiddenCanvas(offsetY);
-                gif.addFrame(canvas, { copy: true, delay: 1000 / frameRate });
-                resolve();
-            });
+        const canvas = document.getElementById('canvas');
+        const gif = new GIF({
+            workers: 2,
+            quality: 10,
+            workerScript: './gif.worker.js', // Specify the correct path to the worker script
+            width: canvas.width,
+            height: canvas.height
         });
-    }
 
-    startJumpAnimation();
+        const duration = 4000; // Duration of the animation in milliseconds (1.2 seconds)
+        const frameRate = 60; // 30 frames per second
+        const totalFrames = Math.round(duration / (1000 / frameRate));
 
-    for (let i = 0; i < totalFrames; i++) {
-        const progress = i / totalFrames;
-        const height = canvas.height * 0.10; // 10% of canvas height
-        const easeOutQuad = t => t * (2 - t);
-        const easeInQuad = t => t * t;
-
-        let offsetY;
-        if (i < totalFrames / 2) {
-            offsetY = easeOutQuad(progress * 2) * height;
-        } else {
-            offsetY = height - (easeInQuad((progress - 0.5) * 2) * height);
+        function captureFrame(offsetY) {
+            return new Promise(resolve => {
+                requestAnimationFrame(async () => {
+                    await updateHiddenCanvas(offsetY);
+                    gif.addFrame(canvas, { copy: true, delay: 1000 / frameRate });
+                    resolve();
+                });
+            });
         }
 
-        await captureFrame(-offsetY);
-    }
+        startJumpAnimation();
 
-    stopJumpAnimation();
+        for (let i = 0; i < totalFrames; i++) {
+            const progress = i / totalFrames;
+            const height = canvas.height * 0.10; // 10% of canvas height
+            const easeOutQuad = t => t * (2 - t);
+            const easeInQuad = t => t * t;
 
-    gif.on('finished', function (blob) {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'jump-animation.gif';
-        link.click();
-    });
+            let offsetY;
+            if (i < totalFrames / 2) {
+                offsetY = easeOutQuad(progress) * height;
+            } else {
+                offsetY = height - (easeInQuad((progress - 0.5) * 2) * height);
+            }
 
-    gif.render();
-}
+            await captureFrame(-offsetY);
+        }
 
-async function downloadPeekAnimation() {
-    const canvas = document.getElementById('canvas');
-    const gif = new GIF({
-        workers: 2,
-        quality: 10,
-        workerScript: './gif.worker.js', // Specify the correct path to the worker script
-        width: canvas.width,
-        height: canvas.height
-    });
+        stopJumpAnimation();
 
-    const duration = 4000; // Duration of the animation in milliseconds (4 seconds)
-    const frameRate = 30; // 30 frames per second
-    const totalFrames = Math.round(duration / (1000 / frameRate));
-
-    function captureFrame(transform) {
-        return new Promise(resolve => {
-            requestAnimationFrame(async () => {
-                await updateHiddenCanvas(0, transform);
-                gif.addFrame(canvas, { copy: true, delay: 1000 / frameRate });
-                resolve();
-            });
+        gif.on('finished', function (blob) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'jump-animation.gif';
+            link.click();
         });
+
+        gif.render();
     }
 
-    startPeekAnimation();
+    async function downloadPeekAnimation() {
+        const canvas = document.getElementById('canvas');
+        const gif = new GIF({
+            workers: 2,
+            quality: 10,
+            workerScript: './gif.worker.js', // Specify the correct path to the worker script
+            width: canvas.width,
+            height: canvas.height
+        });
 
-    for (let i = 0; i < totalFrames; i++) {
-        const progress = i / totalFrames;
-        const startX = -canvas.width;
-        const startY = canvas.height;
-        const endX = canvas.width * 0.5;
-        const endY = canvas.height * -0.70;
-        const translateX = startX + (endX - startX) * progress;
-        const translateY = startY + (endY - startY) * progress;
-        const scale = 2.25;
-        const rotation = 45 * (Math.PI / 180);
-        const cosRot = Math.cos(rotation);
-        const sinRot = Math.sin(rotation);
-        const transform = [
-            scale * cosRot,
-            scale * sinRot,
-            -scale * sinRot,
-            scale * cosRot,
-            translateX,
-            translateY
-        ];
+        const duration = 4000; // Duration of the animation in milliseconds (4 seconds)
+        const frameRate = 30; // 30 frames per second
+        const totalFrames = Math.round(duration / (1000 / frameRate));
 
-        await captureFrame(transform);
+        function captureFrame(transform) {
+            return new Promise(resolve => {
+                requestAnimationFrame(async () => {
+                    await updateHiddenCanvas(0, transform);
+                    gif.addFrame(canvas, { copy: true, delay: 1000 / frameRate });
+                    resolve();
+                });
+            });
+        }
+
+        startPeekAnimation();
+
+        for (let i = 0; i < totalFrames; i++) {
+            const progress = i / totalFrames;
+            const startX = -canvas.width;
+            const startY = canvas.height;
+            const endX = canvas.width * 0.5;
+            const endY = canvas.height * -0.70;
+            const translateX = startX + (endX - startX) * progress;
+            const translateY = startY + (endY - startY) * progress;
+            const scale = 2.25;
+            const rotation = 45 * (Math.PI / 180);
+            const cosRot = Math.cos(rotation);
+            const sinRot = Math.sin(rotation);
+            const transform = [
+                scale * cosRot,
+                scale * sinRot,
+                -scale * sinRot,
+                scale * cosRot,
+                translateX,
+                translateY
+            ];
+
+            await captureFrame(transform);
+        }
+
+        stopPeekAnimation();
+
+        gif.on('finished', function (blob) {
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'peek-animation.gif';
+            link.click();
+        });
+
+        gif.render();
     }
-
-    stopPeekAnimation();
-
-    gif.on('finished', function (blob) {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'peek-animation.gif';
-        link.click();
-    });
-
-    gif.render();
-}
-
-
 
     window.onload = () => {
         createSlider('background-slider', directoryContents.background, 'background');
@@ -950,13 +1272,11 @@ async function downloadPeekAnimation() {
         createSlider('eyes-slider', directoryContents.eyes, 'eyes');
         createSlider('mouth-slider', directoryContents.mouth, 'mouth');
         createSlider('hand-slider', directoryContents.hand, 'hand');
+        createSlider('pets-slider', directoryContents.pets, 'pets');
 
         // Set default selections
         updateTraits();
     };
 </script>
-
-
-
 </body>
 </html>
