@@ -190,6 +190,16 @@
             font-size: 0.8rem;
             margin-bottom: 10px;
         }
+        .petsCover {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+            content: '';
+            background-color: rgba(0,0,0,.15);
+        }
     </style>
 </head>
 <body>
@@ -238,6 +248,7 @@
             </div>
             <h3>Pets</h3>
             <div id="pets-slider-container" class="slider-container">
+                <div class="petsCover"></div>
                 <div id="pets-slider" class="slider"></div>
             </div>
         </div>
@@ -606,13 +617,28 @@ function clearCanvas() {
 
 
 function selectTrait(category, src) {
-    if (category === 'pets') {
-        console.log('Stopping current GIF for pets and resetting canvas...');
-        stopCurrentGif(); // Stop the current GIF and reset the canvas
+        if (category === 'pets') {
+            console.log('Stopping current GIF for pets and resetting canvas...');
+            stopCurrentGif(); // Stop the current GIF and reset the canvas
+
+            // Get the petsCover element
+            const petsCover = document.querySelector('.petsCover');
+
+            if (petsCover) {
+                // Show the petsCover element
+                petsCover.style.display = 'block';
+
+                // Hide the petsCover element after 1 second
+                setTimeout(() => {
+                    petsCover.style.display = 'none';
+                }, 1000);
+            }
+        }
+        
+        selectedTraits[category] = src.includes('none.png') ? "" : src;
+        updateTraits(); // Update the canvas with the new trait
     }
-    selectedTraits[category] = src.includes('none.png') ? "" : src;
-    updateTraits(); // Update the canvas with the new trait
-}
+
 
 
 
