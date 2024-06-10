@@ -931,51 +931,62 @@ async function updateHiddenCanvas() {
 }
 async function downloadPFP() {
         const downloadButton = document.querySelector('.col-buttons button:first-child');
+        const resetButton = document.querySelector('.col-buttons button:nth-child(2)');
+        const randomButton = document.querySelector('.col-buttons button:nth-child(3)');
+        const uploadButton = document.querySelector('.col-buttons button:nth-child(4)');
+        
         let originalText = downloadButton.textContent;
 
-        const hiddenCanvas = document.getElementById('hiddenCanvas');
-        const hiddenContext = hiddenCanvas.getContext('2d', { willReadFrequently: true });
-        hiddenCanvas.width = 1080;
-        hiddenCanvas.height = 1080;
-
-        // Function to load images with cross-origin handling
-        const loadFullResolutionImage = async (src) => {
-            return new Promise((resolve, reject) => {
-                if (!src) {
-                    resolve(null);
-                    return;
-                }
-                const img = new Image();
-                img.crossOrigin = 'anonymous'; // Allow cross-origin images
-                img.onload = () => resolve(img);
-                img.onerror = reject;
-                img.src = src;
-            });
-        };
-
-        // Load all non-pet trait images at full resolution
-        const nonPetImages = await Promise.all([
-            selectedTraits.background ? loadFullResolutionImage(selectedTraits.background) : null,
-            selectedTraits.skin ? loadFullResolutionImage(selectedTraits.skin) : null,
-            selectedTraits.head ? loadFullResolutionImage(selectedTraits.head) : null,
-            selectedTraits.clothes ? loadFullResolutionImage(selectedTraits.clothes) : null,
-            selectedTraits.eyes ? loadFullResolutionImage(selectedTraits.eyes) : null,
-            selectedTraits.mouth ? loadFullResolutionImage(selectedTraits.mouth) : null,
-            selectedTraits.hand ? loadFullResolutionImage(selectedTraits.hand) : null
-        ]);
-
-        // Clear the hidden canvas before drawing
-        hiddenContext.clearRect(0, 0, hiddenCanvas.width, hiddenCanvas.height);
-
-        // Draw all non-pet layers to the hidden canvas
-        nonPetImages.forEach(image => {
-            if (image) {
-                hiddenContext.drawImage(image, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
-            }
-        });
+        function toggleButtons(enable) {
+            downloadButton.disabled = !enable;
+            resetButton.disabled = !enable;
+            randomButton.disabled = !enable;
+            uploadButton.disabled = !enable;
+        }
 
         if (!selectedTraits.pets || selectedTraits.pets.includes("none.png")) {
             // No pet selected or selected "none.png", download as PNG
+            const hiddenCanvas = document.getElementById('hiddenCanvas');
+            const hiddenContext = hiddenCanvas.getContext('2d', { willReadFrequently: true });
+            hiddenCanvas.width = 1080;
+            hiddenCanvas.height = 1080;
+
+            // Load non-pet traits images at full resolution
+            const loadFullResolutionImage = async (src) => {
+                return new Promise((resolve, reject) => {
+                    if (!src) {
+                        resolve(null);
+                        return;
+                    }
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous'; // Allow cross-origin images
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = src;
+                });
+            };
+
+            // Load all non-pet trait images at full resolution
+            const nonPetImages = await Promise.all([
+                selectedTraits.background ? loadFullResolutionImage(selectedTraits.background) : null,
+                selectedTraits.skin ? loadFullResolutionImage(selectedTraits.skin) : null,
+                selectedTraits.head ? loadFullResolutionImage(selectedTraits.head) : null,
+                selectedTraits.clothes ? loadFullResolutionImage(selectedTraits.clothes) : null,
+                selectedTraits.eyes ? loadFullResolutionImage(selectedTraits.eyes) : null,
+                selectedTraits.mouth ? loadFullResolutionImage(selectedTraits.mouth) : null,
+                selectedTraits.hand ? loadFullResolutionImage(selectedTraits.hand) : null
+            ]);
+
+            // Clear the hidden canvas before drawing
+            hiddenContext.clearRect(0, 0, hiddenCanvas.width, hiddenCanvas.height);
+
+            // Draw all non-pet layers to the hidden canvas
+            nonPetImages.forEach(image => {
+                if (image) {
+                    hiddenContext.drawImage(image, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
+                }
+            });
+
             const link = document.createElement('a');
             link.download = 'PIXI.png';
             link.href = hiddenCanvas.toDataURL();
@@ -989,6 +1000,9 @@ async function downloadPFP() {
                 downloadButton.textContent = "Generating" + ".".repeat(dots);
             }, 500);
 
+            // Disable buttons during GIF generation
+            toggleButtons(false);
+
             const gif = new GIF({
                 workers: 2,
                 quality: 10,
@@ -998,7 +1012,35 @@ async function downloadPFP() {
                 repeat: 0 // Loop forever
             });
 
-            // Capture frames of the pet GIF along with the non-pet layers
+            const hiddenCanvas = document.getElementById('hiddenCanvas');
+            const hiddenContext = hiddenCanvas.getContext('2d', { willReadFrequently: true });
+            hiddenCanvas.width = 1080;
+            hiddenCanvas.height = 1080;
+
+            const loadFullResolutionImage = async (src) => {
+                return new Promise((resolve, reject) => {
+                    if (!src) {
+                        resolve(null);
+                        return;
+                    }
+                    const img = new Image();
+                    img.crossOrigin = 'anonymous'; // Allow cross-origin images
+                    img.onload = () => resolve(img);
+                    img.onerror = reject;
+                    img.src = src;
+                });
+            };
+
+            const nonPetImages = await Promise.all([
+                selectedTraits.background ? loadFullResolutionImage(selectedTraits.background) : null,
+                selectedTraits.skin ? loadFullResolutionImage(selectedTraits.skin) : null,
+                selectedTraits.head ? loadFullResolutionImage(selectedTraits.head) : null,
+                selectedTraits.clothes ? loadFullResolutionImage(selectedTraits.clothes) : null,
+                selectedTraits.eyes ? loadFullResolutionImage(selectedTraits.eyes) : null,
+                selectedTraits.mouth ? loadFullResolutionImage(selectedTraits.mouth) : null,
+                selectedTraits.hand ? loadFullResolutionImage(selectedTraits.hand) : null
+            ]);
+
             let frameCount = 0;
             let frames = [];
             const petFrameCounts = {
@@ -1028,14 +1070,12 @@ async function downloadPFP() {
 
                         frameContext.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
 
-                        // Draw each non-pet trait at full resolution
                         nonPetImages.forEach(image => {
                             if (image) {
                                 frameContext.drawImage(image, 0, 0, frameCanvas.width, frameCanvas.height);
                             }
                         });
 
-                        // Draw the current frame of the pet GIF onto the frame canvas
                         frameContext.drawImage(frame.buffer, 0, 0, frameCanvas.width, frameCanvas.height);
 
                         frames.push({ canvas: frameCanvas, delay: 150 });
@@ -1061,6 +1101,9 @@ async function downloadPFP() {
                 link.href = URL.createObjectURL(blob);
                 link.download = 'PIXI.gif';
                 link.click();
+
+                // Re-enable buttons after GIF is downloaded
+                toggleButtons(true);
             });
 
             gif.render();
