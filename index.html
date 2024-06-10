@@ -246,6 +246,7 @@
 
 <canvas id="hiddenCanvas" width="1080" height="1080" style="display:none;"></canvas>
 
+
 <script>
     const directoryContents = {
         "background": [
@@ -929,145 +930,143 @@ async function updateHiddenCanvas() {
     }
 }
 async function downloadPFP() {
-    if (!selectedTraits.pets) {
-        // No pet selected, download as static PNG
-        const canvas = document.getElementById('hiddenCanvas');
-        const link = document.createElement('a');
-        link.download = 'PIXI.png';
-        link.href = canvas.toDataURL();
-        link.click();
-        return;
-    }
+        const downloadButton = document.querySelector('.col-buttons button:first-child');
+        let originalText = downloadButton.textContent;
 
-    // Mapping of pet GIFs to their frame counts
-    const petFrameCounts = {
-        'cat.gif': 38,
-        'gorilla.gif': 15,
-        'dragon.gif': 57,
-        'hamster.gif': 46,
-        'nubcat.gif': 36,
-        'penguin.gif': 30,
-        'shiba.gif': 49,
-        'snake.gif': 38,
-        'standingcat.gif': 100
-        // Add other pets here if needed
-    };
+        const hiddenCanvas = document.getElementById('hiddenCanvas');
+        const hiddenContext = hiddenCanvas.getContext('2d', { willReadFrequently: true });
+        hiddenCanvas.width = 1080;
+        hiddenCanvas.height = 1080;
 
-    // Determine the filename of the pet GIF from the selectedTraits.pets URL
-    const petFileName = selectedTraits.pets.split('/').pop(); // Get the file name from the URL
+        // Function to load images with cross-origin handling
+        const loadFullResolutionImage = async (src) => {
+            return new Promise((resolve, reject) => {
+                if (!src) {
+                    resolve(null);
+                    return;
+                }
+                const img = new Image();
+                img.crossOrigin = 'anonymous'; // Allow cross-origin images
+                img.onload = () => resolve(img);
+                img.onerror = reject;
+                img.src = src;
+            });
+        };
 
-    // Get the total frames for the selected pet
-    const totalFrames = petFrameCounts[petFileName] || 60; // Default to 60 if pet is not in the mapping
+        // Load all non-pet trait images at full resolution
+        const nonPetImages = await Promise.all([
+            selectedTraits.background ? loadFullResolutionImage(selectedTraits.background) : null,
+            selectedTraits.skin ? loadFullResolutionImage(selectedTraits.skin) : null,
+            selectedTraits.head ? loadFullResolutionImage(selectedTraits.head) : null,
+            selectedTraits.clothes ? loadFullResolutionImage(selectedTraits.clothes) : null,
+            selectedTraits.eyes ? loadFullResolutionImage(selectedTraits.eyes) : null,
+            selectedTraits.mouth ? loadFullResolutionImage(selectedTraits.mouth) : null,
+            selectedTraits.hand ? loadFullResolutionImage(selectedTraits.hand) : null
+        ]);
 
-    console.log(`Capturing ${totalFrames} frames for ${petFileName}`);
+        // Clear the hidden canvas before drawing
+        hiddenContext.clearRect(0, 0, hiddenCanvas.width, hiddenCanvas.height);
 
-    // Pet is selected, download as GIF
-    const gif = new GIF({
-        workers: 2,
-        quality: 10,
-        workerScript: './gif.worker.js', // Use local path to the worker script
-        width: 1080, // Set the width to 1080 for full resolution
-        height: 1080, // Set the height to 1080 for full resolution
-        repeat: 0 // Loop forever
-    });
-
-    // Use the hidden canvas for capturing frames
-    const hiddenCanvas = document.getElementById('hiddenCanvas');
-    const hiddenContext = hiddenCanvas.getContext('2d', { willReadFrequently: true });
-
-    // Set the size of the hidden canvas to full resolution
-    hiddenCanvas.width = 1080;
-    hiddenCanvas.height = 1080;
-
-    // Load non-pet traits at full resolution with cross-origin handling
-    const loadFullResolutionImage = async (src) => {
-        return new Promise((resolve, reject) => {
-            if (!src) {
-                resolve(null);
-                return;
+        // Draw all non-pet layers to the hidden canvas
+        nonPetImages.forEach(image => {
+            if (image) {
+                hiddenContext.drawImage(image, 0, 0, hiddenCanvas.width, hiddenCanvas.height);
             }
-            const img = new Image();
-            img.crossOrigin = 'anonymous'; // Allow cross-origin images
-            img.onload = () => resolve(img);
-            img.onerror = reject;
-            img.src = src;
         });
-    };
 
-    // Load all non-pet traits images at full resolution
-    const nonPetImages = await Promise.all([
-        selectedTraits.background ? loadFullResolutionImage(selectedTraits.background) : null,
-        selectedTraits.skin ? loadFullResolutionImage(selectedTraits.skin) : null,
-        selectedTraits.head ? loadFullResolutionImage(selectedTraits.head) : null,
-        selectedTraits.clothes ? loadFullResolutionImage(selectedTraits.clothes) : null,
-        selectedTraits.eyes ? loadFullResolutionImage(selectedTraits.eyes) : null,
-        selectedTraits.mouth ? loadFullResolutionImage(selectedTraits.mouth) : null,
-        selectedTraits.hand ? loadFullResolutionImage(selectedTraits.hand) : null
-    ]);
+        if (!selectedTraits.pets || selectedTraits.pets.includes("none.png")) {
+            // No pet selected or selected "none.png", download as PNG
+            const link = document.createElement('a');
+            link.download = 'PIXI.png';
+            link.href = hiddenCanvas.toDataURL();
+            link.click();
+        } else {
+            // Pet is selected, download as GIF
+            downloadButton.textContent = "Generating...";
+            let dots = 0;
+            const loadingInterval = setInterval(() => {
+                dots = (dots + 1) % 4;
+                downloadButton.textContent = "Generating" + ".".repeat(dots);
+            }, 500);
 
-    // Variables to keep track of frame capture
-    let frameCount = 0;
-    let frames = [];
+            const gif = new GIF({
+                workers: 2,
+                quality: 10,
+                workerScript: './gif.worker.js', // Use local path to the worker script
+                width: 1080, // Set the width to 1080 for full resolution
+                height: 1080, // Set the height to 1080 for full resolution
+                repeat: 0 // Loop forever
+            });
 
-    // Capture frames for one complete loop based on the total frames
-    await new Promise((resolve, reject) => {
-        gifler(selectedTraits.pets).frames(hiddenCanvas, function (ctx, frame) {
-            if (frame.done) {
-                console.log('Frame capturing completed.');
-                resolve(); // Resolve the promise when all frames are captured
-                return;
-            }
+            // Capture frames of the pet GIF along with the non-pet layers
+            let frameCount = 0;
+            let frames = [];
+            const petFrameCounts = {
+                'cat.gif': 38,
+                'gorilla.gif': 15,
+                'dragon.gif': 57,
+                'nubcat.gif': 36,
+                'shiba.gif': 49,
+                'snake.gif': 38
+                // Add other pets here if needed
+            };
+            const petFileName = selectedTraits.pets.split('/').pop(); // Get the file name from the URL
+            const totalFrames = petFrameCounts[petFileName] || 60; // Default to 60 if pet is not in the mapping
 
-            if (frameCount < totalFrames) {
-                // Create a new canvas for each frame to avoid overwriting the previous frame
-                const frameCanvas = document.createElement('canvas');
-                frameCanvas.width = 1080;
-                frameCanvas.height = 1080;
-                const frameContext = frameCanvas.getContext('2d', { willReadFrequently: true });
+            await new Promise((resolve, reject) => {
+                gifler(selectedTraits.pets).frames(hiddenCanvas, function (ctx, frame) {
+                    if (frame.done) {
+                        resolve();
+                        return;
+                    }
 
-                // Clear the frame canvas
-                frameContext.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+                    if (frameCount < totalFrames) {
+                        const frameCanvas = document.createElement('canvas');
+                        frameCanvas.width = 1080;
+                        frameCanvas.height = 1080;
+                        const frameContext = frameCanvas.getContext('2d', { willReadFrequently: true });
 
-                // Draw each non-pet trait at full resolution
-                nonPetImages.forEach(image => {
-                    if (image) {
-                        frameContext.drawImage(image, 0, 0, frameCanvas.width, frameCanvas.height);
+                        frameContext.clearRect(0, 0, frameCanvas.width, frameCanvas.height);
+
+                        // Draw each non-pet trait at full resolution
+                        nonPetImages.forEach(image => {
+                            if (image) {
+                                frameContext.drawImage(image, 0, 0, frameCanvas.width, frameCanvas.height);
+                            }
+                        });
+
+                        // Draw the current frame of the pet GIF onto the frame canvas
+                        frameContext.drawImage(frame.buffer, 0, 0, frameCanvas.width, frameCanvas.height);
+
+                        frames.push({ canvas: frameCanvas, delay: 150 });
+
+                        frameCount++;
+                    }
+
+                    if (frameCount >= totalFrames) {
+                        resolve();
                     }
                 });
+            });
 
-                // Draw the current frame of the pet GIF onto the frame canvas
-                frameContext.drawImage(frame.buffer, 0, 0, frameCanvas.width, frameCanvas.height);
+            frames.forEach(({ canvas, delay }) => {
+                gif.addFrame(canvas, { copy: true, delay: 150 });
+            });
 
-                console.log(`Adding frame ${frameCount + 1}/${totalFrames} to GIF: delay ${frame.delay}ms`);
+            gif.on('finished', function (blob) {
+                clearInterval(loadingInterval);
+                downloadButton.textContent = originalText;
 
-                // Store the frame for later use
-                frames.push({ canvas: frameCanvas, delay: 150 }); // Set delay to 150 ms for each frame
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = 'PIXI.gif';
+                link.click();
+            });
 
-                frameCount++; // Increment the frame count
-            }
+            gif.render();
+        }
+    }
 
-            if (frameCount >= totalFrames) {
-                console.log('Stopping frame capture after one loop.');
-                resolve(); // Resolve the promise to stop capturing more frames
-            }
-        });
-    });
-
-    // Add frames to the GIF with a fixed delay of 150 ms
-    frames.forEach(({ canvas, delay }) => {
-        gif.addFrame(canvas, { copy: true, delay: 150 }); // Set delay to 150 ms
-    });
-
-    gif.on('finished', function (blob) {
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'PIXI.gif';
-        link.click();
-    });
-
-    // Start rendering the GIF
-    gif.render();
-}
 
 
 
